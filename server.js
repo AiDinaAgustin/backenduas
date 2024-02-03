@@ -8,8 +8,8 @@ const PORT = 3000;
 app.use(bodyParser.json());
 
 
-// endpoint mahasiswa
-app.use('/tasks', taskController);
+// endpoint tasks
+app.use('/', taskController);
 
 // jalankan server
 app.listen(PORT, () => {
