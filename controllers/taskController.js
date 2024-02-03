@@ -71,7 +71,7 @@ router.delete('/tasks/:id', (req, res) => {
 });
 
 
-
+//USER
 //GET /users
 router.get('/users', (req, res) => {
     db.query('SELECT * FROM user', (error, results) => {
@@ -136,6 +136,76 @@ router.delete('/users/:id', (req, res) => {
             res.status(500).json({ message: 'Internal Server Error' });
         } else {
             res.json({ message: 'user deleted successfully' });
+        }
+    });
+});
+
+
+//CATEGORY
+//GET /categories
+router.get('/categories', (req, res) => {
+    db.query('SELECT * FROM category', (error, results) => {
+        if (error) {
+            console.error('Error fetching tasks:', error);
+            res.status(500).json({ message: 'Internal Server Error' });
+        } else {
+            res.json(results);
+        }
+    });
+});
+
+//GET /categories/:id
+router.get('/categories/:id', (req, res) => {
+    const taskId = req.params.id;
+    db.query('SELECT * FROM category WHERE id = ?', [taskId], (error, results) => {
+        if (error) {
+            console.error('Error fetching task:', error);
+            res.status(500).json({ message: 'Internal Server Error' });
+        } else if (results.length === 0) {
+            res.status(404).json({ message: 'category not found' });
+        } else {
+            res.json(results[0]);
+        }
+    });
+});
+
+// POST /categories
+router.post('/categories', (req, res) => {
+    const { name } = req.body;
+    db.query('INSERT INTO category (name) VALUES (?)', [name], (error) => {
+        if (error) {
+            console.error('Error creating category:', error);
+            res.status(500).json({ message: 'Internal Server Error' });
+        } else {
+            res.json({ message: 'category created successfully' });
+        }
+    });
+});
+
+//PUT /categories/:id
+router.put('/categories/:id', (req, res) => {
+    const taskId = req.params.id;
+    const { name } = req.body;
+    db.query('UPDATE category SET name = ? WHERE id = ?', [name, taskId], (error) => {
+        if (error) {
+            console.error('Error updating category:', error);
+            res.status(500).json({ message: 'Internal Server Error' });
+        } else {
+            res.json({ message: 'category updated successfully' });
+        }
+    });
+});
+
+
+// DELETE /categories/:id
+router.delete('/categories/:id', (req, res) => {
+    const taskId= req.params.id;
+    db.query('DELETE FROM category WHERE id = ?', [taskId], (error) => {
+        if (error) {
+            console.error('Error deleting category:', error);
+            res.status(500).json({ message: 'Internal Server Error' });
+        } else {
+            res.json({ message: 'category deleted successfully' });
         }
     });
 });
